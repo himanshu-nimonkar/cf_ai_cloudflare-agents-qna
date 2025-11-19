@@ -1,0 +1,44 @@
+name = "ai-chat-app"
+main = "src/worker.js"
+compatibility_date = "2025-11-19"
+account_id = "0c1a1792438a78ccf999566b941f669b"
+
+# Durable Objects Configuration
+[[durable_objects.bindings]]
+name = "CHAT_DO"
+class_name = "ChatRoom"
+
+# Durable Objects Migration
+[[migrations]]
+tag = "v1"
+new_classes = ["ChatRoom"]
+
+# Workers AI Binding
+[ai]
+binding = "AI"
+
+# Vectorize Binding (for RAG)
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "cloudflare-agents-docs"
+
+# Note: R2 bucket for images optional - enable R2 in dashboard first if needed
+# [[r2_buckets]]
+# binding = "IMAGES_BUCKET"
+# bucket_name = "ai-chat-images"
+
+# Static Assets
+[assets]
+directory = "./static"
+binding = "ASSETS"
+
+# Environment Variables (Set via: wrangler secret put JWT_SECRET)
+# JWT_SECRET = "your-secret-key-here"
+
+# Development Configuration
+[env.dev]
+vars = { ENVIRONMENT = "development" }
+
+# Production Configuration
+[env.production]
+vars = { ENVIRONMENT = "production" }

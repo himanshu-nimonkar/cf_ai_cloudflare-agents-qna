@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudflare Agents Q&A</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-theme="light">
+  <div class="container" data-theme="light">
+  <script>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.querySelector('.container').setAttribute('data-theme', savedTheme);
+  </script>
+    <header class="header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Cloudflare Agents Q&A</h1>
+          <p>Ask questions about Cloudflare Agents SDK</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-icon" onclick="openSearch()" title="Search conversations">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </button>
+          <button class="btn-icon" onclick="openCostTracker()" title="Usage & Cost">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </button>
+          <button class="btn-icon" onclick="exportChat()" title="Export conversation">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+          </button>
+          <button class="btn-icon" onclick="clearChat()" title="Clear chat">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+          <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="theme-toggle-slider">
+              <svg id="themeIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="info-bar">
+      Documentation: <a href="https://developers.cloudflare.com/agents/" target="_blank">developers.cloudflare.com/agents</a>
+    </div>
+
+    <div class="chat-wrapper">
+      <div class="chat" id="chat">
+        <div class="welcome">
+          <h2>Welcome to Cloudflare Agents Q&A</h2>
+          <p>Ask me anything about the Cloudflare Agents SDK, Workers AI, Durable Objects, Workflows, MCP servers, and related platform features.</p>
+          <div class="example-questions">
+            <button class="example-btn" onclick="askExample(this)">How do I create my first Cloudflare Agent?</button>
+            <button class="example-btn" onclick="askExample(this)">What is the Agent class and how does it work?</button>
+            <button class="example-btn" onclick="askExample(this)">How do I use WebSockets with Agents?</button>
+            <button class="example-btn" onclick="askExample(this)">How do I integrate MCP servers with my Agent?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-container">
+        <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Voice input">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+          </svg>
+        </button>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Ask about Cloudflare Agents..."
+            onkeypress="if(event.key==='Enter') sendMessage()"
+          />
+        </div>
+        <button class="btn-send" id="sendBtn" onclick="sendMessage()">
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="searchModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Search Conversations</h2>
+        <button class="btn-close" onclick="closeSearch()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Search messages..."
+        oninput="performSearch()"
+      />
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="costModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Usage & Cost Tracking</h2>
+        <button class="btn-close" onclick="closeCostTracker()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cost-stats" id="costStats"></div>
+    </div>
+  </div>
+
+  <div class="confirm-modal" id="confirmModal">
+    <div class="confirm-content">
+      <h3 class="confirm-title">Clear All Conversations?</h3>
+      <p class="confirm-message">This will permanently delete all your chat history and cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn-cancel" onclick="closeConfirm()">Cancel</button>
+        <button class="btn-confirm" onclick="confirmClear()">Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

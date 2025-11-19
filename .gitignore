@@ -1,0 +1,7 @@
+node_modules/
+*.log
+.env
+.dev.vars
+.wrangler/
+dist/
+docs-chunks-wrapped.json
